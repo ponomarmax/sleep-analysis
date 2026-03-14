@@ -6,16 +6,17 @@ from pathlib import Path
 
 class Recorder:
 
-    def __init__(self, serializers, base_path="data"):
+    def __init__(self, serializers, base_path="data", queue_size=10000):
 
         ts = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
 
         self.session_path = Path(base_path) / f"session-{ts}"
-        self.session_path.mkdir(parents=True)
+        self.session_path.mkdir(parents=True, exist_ok=True)
 
         self.serializers = serializers
 
-        self.queue = queue.Queue()
+        self.queue = queue.Queue(maxsize=queue_size)
+
         self.files = {}
 
         self.running = True
@@ -24,13 +25,18 @@ class Recorder:
             target=self._writer_loop,
             daemon=True
         )
+
         self.thread.start()
 
     def _get_file(self, stream):
 
         if stream not in self.files:
 
-            path = self.session_path / f"{stream}.bin"
+            serializer = self.serializers[stream]
+
+            ext = serializer.file_extension()
+
+            path = self.session_path / f"{stream}.{ext}"
 
             self.files[stream] = open(path, "ab")
 
@@ -43,26 +49,36 @@ class Recorder:
             "data": data
         }
 
-        self.queue.put((stream, record))
+        try:
+            self.queue.put_nowait((stream, record))
+        except queue.Full:
+            print("Recorder queue overflow")
 
     def _writer_loop(self):
 
         while self.running or not self.queue.empty():
 
-            stream, record = self.queue.get()
+            try:
 
-            serializer = self.serializers[stream]
+                stream, record = self.queue.get(timeout=1)
 
-            payload = serializer.serialize(record)
+                serializer = self.serializers[stream]
 
-            f = self._get_file(stream)
+                payload = serializer.serialize(record)
 
-            f.write(payload)
+                f = self._get_file(stream)
+
+                f.write(payload)
+
+            except queue.Empty:
+                continue
 
     def stop(self):
 
         self.running = False
+
         self.thread.join()
 
         for f in self.files.values():
+            f.flush()
             f.close()

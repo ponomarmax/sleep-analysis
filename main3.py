@@ -10,19 +10,21 @@ from polar_python import PolarDevice
 from polar_python.models import HRData, ECGData, ACCData, PPGData, MAGData, GyroData, PPIData
 import time
 from recorder import Recorder
-from serializer import JSONSerializer
+from serializers.json_serializer import JSONSerializer
+from serializers.msgpack_serializer import MsgpackSerializer
 
-recorder = Recorder(
-    serializers={
-        "ppg": JSONSerializer(),
-        "acc": JSONSerializer(),
-        "hr": JSONSerializer(),
-        "ecg": JSONSerializer(),
-        "mag": JSONSerializer(),
-        "gyro": JSONSerializer(),
-        "ppi": JSONSerializer(),
-    }
-)
+
+serializers = {
+    "ppg": MsgpackSerializer(),
+    "acc": MsgpackSerializer(),
+    "hr": MsgpackSerializer(),
+    "mag": MsgpackSerializer(),
+    "gyro": MsgpackSerializer(),
+    "ppi": MsgpackSerializer(),
+}
+
+recorder = Recorder(serializers)
+
 # -----------------------
 # CONFIG
 # -----------------------
