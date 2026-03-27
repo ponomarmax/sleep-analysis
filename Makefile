@@ -10,6 +10,8 @@ install:
 
 	$(PIP) install --upgrade pip 
 	$(PIP) install -r requirements.txt
+test:
+	$(PY) -m pytest tests/*
 
 run:
 	$(PY) src/main.py
@@ -22,4 +24,8 @@ clean:
 
 format:
 	$(PIP) install black
-	$(VENV)/bin/black src/
+	$(VENV)/bin/black *.py
+
+lint:
+	$(PIP) install pylint
+	$(VENV)/bin/pylint *.py
