@@ -7,6 +7,8 @@ class Serializer:
 
     def serialize(self, record) -> bytes:
         raise NotImplementedError
+    def deserialize(self, data: bytes):
+        raise NotImplementedError
 
     def file_extension(self):
         """Розширення файлу за замовчуванням"""
