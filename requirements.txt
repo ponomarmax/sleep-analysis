@@ -1,8 +1,12 @@
-bleak>=0.22.0           # для роботи з Bluetooth LE
-polar-python>=0.4.0     # офіційна бібліотека Polar Device
-numpy>=1.24.0           # обробка масивів
-pandas>=2.1.0           # збереження та читання CSV/Parquet
-matplotlib>=3.7.0       # візуалізація графіків
-seaborn>=0.12.2         # додаткові графіки / heatmap (опціонально)
-rich>=13.5.2            # для красивого виводу в консоль
+bleak>=0.22.0
+polar-python>=0.4.0
+numpy>=1.24.0
+pandas>=2.1.0
+matplotlib>=3.7.0
+seaborn>=0.12.2
+rich>=13.5.2
 msgpack
+scipy
+black
+pytest
+dash[compress]
