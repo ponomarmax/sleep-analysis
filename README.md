@@ -77,7 +77,7 @@ Target users: anyone interested in improving sleep patterns using detailed digit
 ---
 
 ## 🎥 Demo / Video
-[Watch demo on YouTube]((https://youtu.be/RSyAEPWQ0lA?si=bjZjN-6iIzO0cIEn))
+[Watch demo on YouTube](https://youtu.be/RSyAEPWQ0lA?si=bjZjN-6iIzO0cIEn)
 
 ---
 
